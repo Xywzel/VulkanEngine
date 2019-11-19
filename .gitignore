@@ -30,3 +30,14 @@
 *.exe
 *.out
 *.app
+
+# Visual studio files
+.vs/
+
+# Files in Build and Temp folders
+Build/
+Temp/
+
+# Included headers and libs from elsewhere
+Include/
+Libraries/
