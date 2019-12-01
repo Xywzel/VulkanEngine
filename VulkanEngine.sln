@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.271
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VulkanRenderer", "VulkanRenderer\VulkanRenderer.vcxproj", "{6F7D961B-6C88-495C-94DF-5B601CE8570A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{7E4FA9BA-81AC-43F8-BDA7-048CAB1A4F6C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shaders", "Shaders", "{B2BFA59F-CB2F-484E-9F7E-182C311478CC}"
+	ProjectSection(SolutionItems) = preProject
+		Resources\Shaders\triangle.frag = Resources\Shaders\triangle.frag
+		Resources\Shaders\triangle.vert = Resources\Shaders\triangle.vert
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6F7D961B-6C88-495C-94DF-5B601CE8570A}.Debug|x64.ActiveCfg = Debug|x64
+		{6F7D961B-6C88-495C-94DF-5B601CE8570A}.Debug|x64.Build.0 = Debug|x64
+		{6F7D961B-6C88-495C-94DF-5B601CE8570A}.Debug|x86.ActiveCfg = Debug|Win32
+		{6F7D961B-6C88-495C-94DF-5B601CE8570A}.Debug|x86.Build.0 = Debug|Win32
+		{6F7D961B-6C88-495C-94DF-5B601CE8570A}.Release|x64.ActiveCfg = Release|x64
+		{6F7D961B-6C88-495C-94DF-5B601CE8570A}.Release|x64.Build.0 = Release|x64
+		{6F7D961B-6C88-495C-94DF-5B601CE8570A}.Release|x86.ActiveCfg = Release|Win32
+		{6F7D961B-6C88-495C-94DF-5B601CE8570A}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B2BFA59F-CB2F-484E-9F7E-182C311478CC} = {7E4FA9BA-81AC-43F8-BDA7-048CAB1A4F6C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {67BEC8C9-AB3E-4DDF-9B59-8940373945AA}
+	EndGlobalSection
+EndGlobal
