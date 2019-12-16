@@ -43,6 +43,15 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RenderPass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Framebuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandPool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Algorithms.h">
@@ -73,5 +82,9 @@
     <ClInclude Include="File.h" />
     <ClInclude Include="FileInStream.h" />
     <ClInclude Include="FileOutStream.h" />
+    <ClInclude Include="RenderPass.h" />
+    <ClInclude Include="Framebuffer.h" />
+    <ClInclude Include="VulkanTypes.h" />
+    <ClInclude Include="CommandPool.h" />
   </ItemGroup>
 </Project>

@@ -20,7 +20,10 @@ const std::vector<char> File::read() const
 	}
 
 	size_t fileSize = size_t(file.tellg());
+	file.seekg(0);
 	data.resize(fileSize);
+	file.read(data.data(), data.size());
+
 	return data;
 }
 

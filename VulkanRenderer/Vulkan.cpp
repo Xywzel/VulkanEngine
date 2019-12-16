@@ -11,6 +11,10 @@
 #include "Window.h"
 #include "QueueFamilyIndices.h"
 #include "SwapChainSupport.h"
+#include "Shader.h"
+#include "RenderPass.h"
+#include "Framebuffer.h"
+#include "CommandPool.h"
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
@@ -59,10 +63,28 @@ Vulkan::Vulkan(const VulkanOptions& options, const Window& window)
 	setupLogicalDevice(options);
 	setupSwapChain();
 	setupImageViews();
+	renderpass = new RenderPass(device, swapchainFormat);
+	shader = new Shader(device, swapchainExtent, *renderpass);
+	commandPool = new CommandPool(queueFamily(physicalDevice), device);
+
+	for (VkImageView view : swapchainImageViews)
+	{
+		std::vector<VkImageView> attachments = {view};
+		Framebuffer* buffer = new Framebuffer(*renderpass, attachments, device, swapchainExtent);
+		framebuffers.push_back(buffer);
+	}
 }
 
 Vulkan::~Vulkan()
 {
+	if (commandPool)
+		delete commandPool;
+	for (Framebuffer* buffer : framebuffers)
+		delete buffer;
+	if (shader)
+		delete shader;
+	if (renderpass)
+		delete renderpass;
 	for (VkImageView& view : swapchainImageViews)
 		vkDestroyImageView(device, view, nullptr);
 	if (swapchain)
@@ -271,7 +293,7 @@ void Vulkan::setupSwapChain()
 	swapchainImages.resize(imageCount);
 	vkGetSwapchainImagesKHR(device, swapchain, &imageCount, swapchainImages.data());
 
-	swapchainExtend = extent;
+	swapchainExtent = extent;
 	swapchainFormat = surfaceFormat.format;
 }
 

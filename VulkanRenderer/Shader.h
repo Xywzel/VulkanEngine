@@ -5,18 +5,23 @@
 
 #include <string>
 
+class RenderPass;
+
 class Shader
 {
 public:
-	Shader(VkDevice& device, VkExtent2D& extent);
+	Shader(VkDevice& device, VkExtent2D& extent, RenderPass& renderpass);
 	~Shader();
 
 private:
 	VkShaderModule createModule(const std::string& filename);
-	void createPipeline();
+	void createPipeline(RenderPass& renderpass);
 	
 	VkShaderModule vertexModule;
 	VkShaderModule fragmentModule;
 	VkDevice device;
 	VkExtent2D extent;
+	
+	VkPipelineLayout pipelineLayout;
+	VkPipeline graphicsPipeline;
 };

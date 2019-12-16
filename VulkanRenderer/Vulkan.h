@@ -10,6 +10,11 @@
 struct VulkanOptions;
 struct QueueFamilyIndices;
 class Window;
+class Shader;
+class RenderPass;
+class Framebuffer;
+class CommandPool;
+class CommandBuffer;
 
 class Vulkan
 {
@@ -43,6 +48,11 @@ private:
 	VkSwapchainKHR swapchain = VK_NULL_HANDLE;
 	std::vector<VkImage> swapchainImages;
 	VkFormat swapchainFormat;
-	VkExtent2D swapchainExtend;
+	VkExtent2D swapchainExtent;
 	std::vector<VkImageView> swapchainImageViews;
+	RenderPass* renderpass = nullptr;
+	Shader* shader = nullptr;
+	std::vector<Framebuffer*> framebuffers;
+	CommandPool* commandPool = nullptr;
+	std::vector<CommandBuffer> commandBuffers;
 };

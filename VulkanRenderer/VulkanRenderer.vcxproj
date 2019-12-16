@@ -176,12 +176,15 @@
   <ItemGroup>
     <ClCompile Include="Algorithms.cpp" />
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="CommandPool.cpp" />
     <ClCompile Include="File.cpp" />
     <ClCompile Include="FileInStream.cpp" />
     <ClCompile Include="FileOutStream.cpp" />
+    <ClCompile Include="Framebuffer.cpp" />
     <ClCompile Include="QueueFamilyIndices.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Options.cpp" />
+    <ClCompile Include="RenderPass.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="SwapChainSupport.cpp" />
     <ClCompile Include="Vulkan.cpp" />
@@ -190,15 +193,19 @@
   <ItemGroup>
     <ClInclude Include="Algorithms.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="CommandPool.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="FileInStream.h" />
     <ClInclude Include="FileOutStream.h" />
+    <ClInclude Include="Framebuffer.h" />
     <ClInclude Include="QueueFamilyIndices.h" />
     <ClInclude Include="Options.h" />
+    <ClInclude Include="RenderPass.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SwapChainSupport.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="Vulkan.h" />
+    <ClInclude Include="VulkanTypes.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
