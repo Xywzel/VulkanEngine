@@ -193,6 +193,7 @@
   <ItemGroup>
     <ClInclude Include="Algorithms.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="CommandBuffer.h" />
     <ClInclude Include="CommandPool.h" />
     <ClInclude Include="File.h" />
     <ClInclude Include="FileInStream.h" />
