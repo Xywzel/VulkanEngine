@@ -15,8 +15,8 @@ $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LocalDebuggerWorkingDirectory>$(SolutionDir)</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>a b c 123 auti a</LocalDebuggerCommandArguments>
-    <RemoteDebuggerCommandArguments>a b c 123 auti a</RemoteDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>a</LocalDebuggerCommandArguments>
+    <RemoteDebuggerCommandArguments>a</RemoteDebuggerCommandArguments>
     <LocalDebuggerEnvironment>DISABLE_VK_LAYER_VALVE_steam_overlay_1=1
 $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
   </PropertyGroup>

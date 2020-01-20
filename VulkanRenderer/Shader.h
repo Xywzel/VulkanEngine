@@ -13,6 +13,8 @@ public:
 	Shader(VkDevice& device, VkExtent2D& extent, RenderPass& renderpass);
 	~Shader();
 
+	VkPipeline getPipeline();
+
 private:
 	VkShaderModule createModule(const std::string& filename);
 	void createPipeline(RenderPass& renderpass);

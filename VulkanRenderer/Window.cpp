@@ -39,8 +39,17 @@ std::vector<std::string> Window::getExtensions() const
 
 bool Window::shouldClose()
 {
-	glfwPollEvents();
 	return glfwWindowShouldClose(window);
+}
+
+void Window::poolEvents()
+{
+	glfwPollEvents();
+}
+
+void Window::update()
+{
+	poolEvents();
 }
 
 GLFWwindow * Window::getPointer() const

@@ -9,9 +9,10 @@ class RenderPass;
 class Framebuffer
 {
 public:
-	Framebuffer(RenderPass& renderpass, std::vector<VkImageView> attachments, VkDevice& device, VkExtent2D& extent);
+	Framebuffer(RenderPass& renderpass, std::vector<VkImageView> swapChainImages, VkDevice& device, VkExtent2D& extent);
 	~Framebuffer();
+	std::vector<VkFramebuffer>& getBuffers();
 private:
 	VkDevice device = nullptr;
-	VkFramebuffer buffer = nullptr;
+	std::vector<VkFramebuffer> buffers;
 };

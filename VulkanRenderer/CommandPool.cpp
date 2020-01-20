@@ -22,3 +22,8 @@ CommandPool::~CommandPool()
 {
 	vkDestroyCommandPool(device, commandPool, nullptr);
 }
+
+VkCommandPool CommandPool::getPointer()
+{
+	return commandPool;
+}

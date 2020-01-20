@@ -15,10 +15,12 @@ public:
 	Window(const WindowOptions& options);
 	~Window();
 
-	std::vector<std::string> getExtensions() const;
 	bool shouldClose();
+	void update();
 
 	GLFWwindow* getPointer() const;
+	std::vector<std::string> getExtensions() const;
 private:
+	void poolEvents();
 	GLFWwindow* window;
 };

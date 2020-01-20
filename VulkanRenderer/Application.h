@@ -8,6 +8,8 @@ public:
 	Application();
 	~Application();
 	void run();
+	void update();
+	void render();
 
 private:
 	Window* window = nullptr;

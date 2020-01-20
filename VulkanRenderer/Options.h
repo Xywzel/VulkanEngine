@@ -31,6 +31,7 @@ struct VulkanOptions
 	{
 		"VK_KHR_swapchain"
 	};
+	size_t maxFramesInFlight = 2;
 };
 
 struct Options

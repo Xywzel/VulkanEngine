@@ -176,6 +176,7 @@
   <ItemGroup>
     <ClCompile Include="Algorithms.cpp" />
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="CommandBuffer.cpp" />
     <ClCompile Include="CommandPool.cpp" />
     <ClCompile Include="File.cpp" />
     <ClCompile Include="FileInStream.cpp" />

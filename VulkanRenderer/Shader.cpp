@@ -24,6 +24,11 @@ Shader::~Shader()
 	vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
 }
 
+VkPipeline Shader::getPipeline()
+{
+	return graphicsPipeline;
+}
+
 VkShaderModule Shader::createModule(const std::string & filename)
 {
 	std::vector<char> code = File(filename).read();

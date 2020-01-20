@@ -23,6 +23,8 @@ public:
 	Vulkan(const VulkanOptions& options, const Window& window);
 	~Vulkan();
 
+	void drawFrame();
+
 private:
 	void setupInstance(const VulkanOptions& options, const Window& window);
 	void setupMessager(const VulkanOptions& options);
@@ -31,6 +33,7 @@ private:
 	void setupLogicalDevice(const VulkanOptions& options);
 	void setupSwapChain();
 	void setupImageViews();
+	void setupSemaphores(const VulkanOptions& options);
 
 	bool validationLayersSupported(const std::vector<const char*>& validationLayers) const;
 	bool suitableDevice(const VkPhysicalDevice& device) const;
@@ -52,7 +55,14 @@ private:
 	std::vector<VkImageView> swapchainImageViews;
 	RenderPass* renderpass = nullptr;
 	Shader* shader = nullptr;
-	std::vector<Framebuffer*> framebuffers;
+	Framebuffer* framebuffer = nullptr;
 	CommandPool* commandPool = nullptr;
-	std::vector<CommandBuffer> commandBuffers;
+	CommandBuffer* commandBuffer = nullptr;
+	std::vector<VkSemaphore> imageAvailableSemaphores;
+	std::vector<VkSemaphore> renderFinishedSemaphores;
+	std::vector<VkFence> inFlightFences;
+	std::vector<VkFence> imagesInFlight;
+
+	size_t currentFrame = 0;
+	size_t frameCount = 0;
 };

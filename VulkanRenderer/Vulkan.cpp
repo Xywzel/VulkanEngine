@@ -15,6 +15,7 @@
 #include "RenderPass.h"
 #include "Framebuffer.h"
 #include "CommandPool.h"
+#include "CommandBuffer.h"
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
@@ -67,20 +68,25 @@ Vulkan::Vulkan(const VulkanOptions& options, const Window& window)
 	shader = new Shader(device, swapchainExtent, *renderpass);
 	commandPool = new CommandPool(queueFamily(physicalDevice), device);
 
-	for (VkImageView view : swapchainImageViews)
-	{
-		std::vector<VkImageView> attachments = {view};
-		Framebuffer* buffer = new Framebuffer(*renderpass, attachments, device, swapchainExtent);
-		framebuffers.push_back(buffer);
-	}
+	framebuffer = new Framebuffer(*renderpass, swapchainImageViews, device, swapchainExtent);
+
+	commandBuffer = new CommandBuffer(device, *commandPool, *renderpass, *framebuffer, swapchainExtent, *shader);
+	setupSemaphores(options);
 }
 
 Vulkan::~Vulkan()
 {
+	vkDeviceWaitIdle(device);
+	for (VkSemaphore semaphore : renderFinishedSemaphores)
+		vkDestroySemaphore(device, semaphore, nullptr);
+	for (VkSemaphore semaphore : imageAvailableSemaphores)
+		vkDestroySemaphore(device, semaphore, nullptr);
+	for (VkFence fence : inFlightFences)
+		vkDestroyFence(device, fence, nullptr);
 	if (commandPool)
 		delete commandPool;
-	for (Framebuffer* buffer : framebuffers)
-		delete buffer;
+	if (framebuffer)
+		delete framebuffer;
 	if (shader)
 		delete shader;
 	if (renderpass)
@@ -97,6 +103,55 @@ Vulkan::~Vulkan()
 		destroyDebugMessenger(instance, debugMessenger);
 	if (instance)
 		vkDestroyInstance(instance, nullptr);
+}
+
+void Vulkan::drawFrame()
+{
+	vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
+
+	uint32_t imageIndex;
+	vkAcquireNextImageKHR(device, swapchain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+
+	// Check if a previous frame is using this image (i.e. there is its fence to wait on)
+	if (imagesInFlight[imageIndex] != VK_NULL_HANDLE)
+		vkWaitForFences(device, 1, &imagesInFlight[imageIndex], VK_TRUE, UINT64_MAX);
+	// Mark the image as now being in use by this frame
+	imagesInFlight[imageIndex] = inFlightFences[currentFrame];
+
+	VkSubmitInfo submitInfo = {};
+	submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+
+	VkSemaphore waitSemaphores[] = {imageAvailableSemaphores[currentFrame]};
+	VkPipelineStageFlags waitStages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+	submitInfo.waitSemaphoreCount = 1;
+	submitInfo.pWaitSemaphores = waitSemaphores;
+	submitInfo.pWaitDstStageMask = waitStages;
+
+	submitInfo.commandBufferCount = 1;
+	submitInfo.pCommandBuffers = &commandBuffer->getBuffers()[imageIndex];
+
+	VkSemaphore signalSemaphores[] = {renderFinishedSemaphores[currentFrame]};
+	submitInfo.signalSemaphoreCount = 1;
+	submitInfo.pSignalSemaphores = signalSemaphores;
+
+	vkResetFences(device, 1, &inFlightFences[currentFrame]);
+	if (vkQueueSubmit(graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS)
+		std::cout << "failed to submit draw command buffer!" << std::endl;
+
+	VkPresentInfoKHR presentInfo = {};
+	presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+
+	presentInfo.waitSemaphoreCount = 1;
+	presentInfo.pWaitSemaphores = signalSemaphores;
+
+	VkSwapchainKHR swapChains[] = {swapchain};
+	presentInfo.swapchainCount = 1;
+	presentInfo.pSwapchains = swapChains;
+	presentInfo.pImageIndices = &imageIndex;
+	presentInfo.pResults = nullptr; // Optional
+	vkQueuePresentKHR(presentationQueue, &presentInfo);
+
+	currentFrame = (currentFrame + 1) % frameCount;
 }
 
 void Vulkan::setupInstance(const VulkanOptions& options, const Window& window)
@@ -322,6 +377,34 @@ void Vulkan::setupImageViews()
 		{
 			std::cout << "failed to create image views!" << std::endl;
 		}
+	}
+}
+
+void Vulkan::setupSemaphores(const VulkanOptions& options)
+{
+	frameCount = options.maxFramesInFlight;
+
+	VkSemaphoreCreateInfo semaphoreInfo = {};
+	semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+	VkFenceCreateInfo fenceInfo = {};
+	fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+	fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+	imageAvailableSemaphores.resize(frameCount);
+	renderFinishedSemaphores.resize(frameCount);
+	inFlightFences.resize(frameCount);
+	imagesInFlight.resize(swapchainImages.size(), VK_NULL_HANDLE);
+
+
+	for (size_t i = 0; i < frameCount; ++i)
+	{
+		if (vkCreateSemaphore(device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS)
+			std::cout << "failed to create semaphores!" << std::endl;
+		if (vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS)
+			std::cout << "failed to create semaphores!" << std::endl;
+		if (vkCreateFence(device, &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS)
+			std::cout << "failed to create fences!" << std::endl;
 	}
 }
 

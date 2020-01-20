@@ -21,3 +21,6 @@ typedef VkRenderPass_T* VkRenderPass;
 
 struct VkImageView_T;
 typedef VkImageView_T* VkImageView;
+
+struct VkCommandBuffer_T;
+typedef VkCommandBuffer_T* VkCommandBuffer;

@@ -8,24 +8,37 @@
 #include "RenderPass.h"
 
 
-Framebuffer::Framebuffer(RenderPass & renderpass, std::vector<VkImageView> attachments, VkDevice & device, VkExtent2D& extent)
+Framebuffer::Framebuffer(RenderPass & renderpass, std::vector<VkImageView> swapchainImageViews, VkDevice & device, VkExtent2D & extent)
 	: device(device)
 {
-	VkFramebufferCreateInfo framebufferInfo = {};
-	framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-	framebufferInfo.renderPass = renderpass.getPointer();
-	framebufferInfo.attachmentCount = attachments.size();
-	framebufferInfo.pAttachments = attachments.data();
-	framebufferInfo.width = extent.width;
-	framebufferInfo.height = extent.height;
-	framebufferInfo.layers = 1;
+	for (VkImageView view : swapchainImageViews)
+	{
+		std::vector<VkImageView> attachments = {view};
 
-	if (vkCreateFramebuffer(device, &framebufferInfo, nullptr, &buffer) != VK_SUCCESS)
-		std::cout << "failed to create framebuffer!" << std::endl;
+		VkFramebufferCreateInfo framebufferInfo = {};
+		framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+		framebufferInfo.renderPass = renderpass.getPointer();
+		framebufferInfo.attachmentCount = attachments.size();
+		framebufferInfo.pAttachments = attachments.data();
+		framebufferInfo.width = extent.width;
+		framebufferInfo.height = extent.height;
+		framebufferInfo.layers = 1;
+
+		VkFramebuffer buffer;
+		if (vkCreateFramebuffer(device, &framebufferInfo, nullptr, &buffer) != VK_SUCCESS)
+			std::cout << "failed to create framebuffer!" << std::endl;
+
+		buffers.push_back(buffer);
+	}
 }
 
 Framebuffer::~Framebuffer()
 {
-	if (buffer)
+	for (VkFramebuffer &buffer : buffers)
 		vkDestroyFramebuffer(device, buffer, nullptr);
+}
+
+std::vector<VkFramebuffer>& Framebuffer::getBuffers()
+{
+	return buffers;
 }
