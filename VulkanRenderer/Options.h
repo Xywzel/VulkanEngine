@@ -8,7 +8,7 @@ struct WindowOptions
 	std::string title = "Vulkan";
 	int width = 800;
 	int height = 600;
-	bool resizable = false;
+	bool resizable = true;
 };
 
 struct VulkanOptions

@@ -23,7 +23,7 @@ public:
 	Vulkan(const VulkanOptions& options, const Window& window);
 	~Vulkan();
 
-	void drawFrame();
+	void drawFrame(const Window& window);
 
 private:
 	void setupInstance(const VulkanOptions& options, const Window& window);
@@ -31,7 +31,7 @@ private:
 	void setupSurface(const Window& window);
 	void setupDevice();
 	void setupLogicalDevice(const VulkanOptions& options);
-	void setupSwapChain();
+	void setupSwapChain(const Window& window);
 	void setupImageViews();
 	void setupSemaphores(const VulkanOptions& options);
 
@@ -39,6 +39,9 @@ private:
 	bool suitableDevice(const VkPhysicalDevice& device) const;
 	QueueFamilyIndices queueFamily(const VkPhysicalDevice& device) const;
 	bool deviceSupportsExtensions(const VkPhysicalDevice& device) const;
+
+	void recreateSwapchain(const Window& window);
+	void cleanSwapchain();
 
 	// Members
 	VkInstance instance = nullptr;

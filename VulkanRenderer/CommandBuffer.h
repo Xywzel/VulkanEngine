@@ -17,4 +17,7 @@ public:
 	std::vector<VkCommandBuffer>& getBuffers();
 private:
 	std::vector<VkCommandBuffer> commandBuffers;
+
+	VkDevice device = nullptr;
+	CommandPool* commandPool = nullptr;
 };

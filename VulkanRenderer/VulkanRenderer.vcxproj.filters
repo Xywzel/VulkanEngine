@@ -55,6 +55,9 @@
     <ClCompile Include="CommandBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Vector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Algorithms.h">
@@ -90,5 +93,6 @@
     <ClInclude Include="VulkanTypes.h" />
     <ClInclude Include="CommandPool.h" />
     <ClInclude Include="CommandBuffer.h" />
+    <ClInclude Include="Vector.h" />
   </ItemGroup>
 </Project>

@@ -41,5 +41,6 @@ void Application::render()
 {
 	// Get render data from state frame
 	// draw frame
-	vulkan->drawFrame();
+	vulkan->drawFrame(*window);
+	window->setWindowResized(false);
 }

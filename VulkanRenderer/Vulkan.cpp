@@ -16,6 +16,7 @@
 #include "Framebuffer.h"
 #include "CommandPool.h"
 #include "CommandBuffer.h"
+#include "Vector.h"
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
@@ -62,7 +63,7 @@ Vulkan::Vulkan(const VulkanOptions& options, const Window& window)
 	setupSurface(window);
 	setupDevice();
 	setupLogicalDevice(options);
-	setupSwapChain();
+	setupSwapChain(window);
 	setupImageViews();
 	renderpass = new RenderPass(device, swapchainFormat);
 	shader = new Shader(device, swapchainExtent, *renderpass);
@@ -83,10 +84,10 @@ Vulkan::~Vulkan()
 		vkDestroySemaphore(device, semaphore, nullptr);
 	for (VkFence fence : inFlightFences)
 		vkDestroyFence(device, fence, nullptr);
-	if (commandPool)
-		delete commandPool;
 	if (framebuffer)
 		delete framebuffer;
+	if (commandBuffer)
+		delete commandBuffer;
 	if (shader)
 		delete shader;
 	if (renderpass)
@@ -95,6 +96,8 @@ Vulkan::~Vulkan()
 		vkDestroyImageView(device, view, nullptr);
 	if (swapchain)
 		vkDestroySwapchainKHR(device, swapchain, nullptr);
+	if (commandPool)
+		delete commandPool;
 	if (device)
 		vkDestroyDevice(device, nullptr);
 	if (surface)
@@ -105,12 +108,22 @@ Vulkan::~Vulkan()
 		vkDestroyInstance(instance, nullptr);
 }
 
-void Vulkan::drawFrame()
+void Vulkan::drawFrame(const Window & window)
 {
 	vkWaitForFences(device, 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
 	uint32_t imageIndex;
-	vkAcquireNextImageKHR(device, swapchain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+	VkResult result = vkAcquireNextImageKHR(device, swapchain, UINT64_MAX, imageAvailableSemaphores[currentFrame], VK_NULL_HANDLE, &imageIndex);
+	if (result == VK_ERROR_OUT_OF_DATE_KHR)
+	{
+		recreateSwapchain(window);
+		return;
+	}
+	else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
+	{
+		std::cout << "Failed to acquire swap chain" << std::endl;
+		return;
+	}
 
 	// Check if a previous frame is using this image (i.e. there is its fence to wait on)
 	if (imagesInFlight[imageIndex] != VK_NULL_HANDLE)
@@ -149,7 +162,18 @@ void Vulkan::drawFrame()
 	presentInfo.pSwapchains = swapChains;
 	presentInfo.pImageIndices = &imageIndex;
 	presentInfo.pResults = nullptr; // Optional
-	vkQueuePresentKHR(presentationQueue, &presentInfo);
+
+	result = vkQueuePresentKHR(presentationQueue, &presentInfo);
+	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || window.getWindowResized())
+	{
+		recreateSwapchain(window);
+		return;
+	}
+	else if (result != VK_SUCCESS)
+	{
+		std::cout << "Failed to acquire swap chain" << std::endl;
+		return;
+	}
 
 	currentFrame = (currentFrame + 1) % frameCount;
 }
@@ -295,13 +319,13 @@ void Vulkan::setupLogicalDevice(const VulkanOptions& options)
 	vkGetDeviceQueue(device, indices.presentation.value(), 0, &presentationQueue);
 }
 
-void Vulkan::setupSwapChain()
+void Vulkan::setupSwapChain(const Window & window)
 {
 	SwapChainSupport details(physicalDevice, surface);
 
 	VkSurfaceFormatKHR surfaceFormat = details.getBestSurfaceFormat();
 	VkPresentModeKHR presentMode = details.getBestPresentationMode();
-	VkExtent2D extent = details.getSwapExtent();
+	VkExtent2D extent = details.getSwapExtent(window);
 
 	uint32_t imageCount = details.capabilities.minImageCount + 1;
 	if (details.capabilities.maxImageCount > 0)
@@ -499,4 +523,41 @@ bool Vulkan::deviceSupportsExtensions(const VkPhysicalDevice & device) const
 	}
 
 	return requiredExtensions.empty();
+}
+
+void Vulkan::recreateSwapchain(const Window & window)
+{
+	// Don't recreate when minimizing the window, as there is nothing to render
+	Vec2u res = window.getResolution();
+	if (res.x == 0u || res.y == 0u)
+		return;
+
+	vkDeviceWaitIdle(device);
+	cleanSwapchain();
+
+	setupSwapChain(window);
+	setupImageViews();
+	renderpass = new RenderPass(device, swapchainFormat);
+	shader = new Shader(device, swapchainExtent, *renderpass);
+	framebuffer = new Framebuffer(*renderpass, swapchainImageViews, device, swapchainExtent);
+	commandBuffer = new CommandBuffer(device, *commandPool, *renderpass, *framebuffer, swapchainExtent, *shader);
+
+	std::cout << "Swapchain recreated" << std::endl;
+}
+
+
+void Vulkan::cleanSwapchain()
+{
+	if (commandBuffer)
+		delete commandBuffer;
+	if (framebuffer)
+		delete framebuffer;
+	if (shader)
+		delete shader;
+	if (renderpass)
+		delete renderpass;
+	for (VkImageView& view : swapchainImageViews)
+		vkDestroyImageView(device, view, nullptr);
+	if (swapchain)
+		vkDestroySwapchainKHR(device, swapchain, nullptr);
 }

@@ -5,6 +5,8 @@
 #define GLFW_INCLUDE_VULKAN
 #include "GLFW/glfw3.h"
 
+class Window;
+
 struct SwapChainSupport
 {
 	VkSurfaceCapabilitiesKHR capabilities;
@@ -15,5 +17,5 @@ struct SwapChainSupport
 	bool adequate() const;
 	VkSurfaceFormatKHR getBestSurfaceFormat() const;
 	VkPresentModeKHR getBestPresentationMode() const;
-	VkExtent2D getSwapExtent() const;
+	VkExtent2D getSwapExtent(const Window& window) const;
 };

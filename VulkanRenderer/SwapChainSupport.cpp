@@ -7,6 +7,8 @@
 #include "GLFW/glfw3.h"
 
 #include "Options.h"
+#include "Vector.h"
+#include "Window.h"
 
 SwapChainSupport::SwapChainSupport(const VkPhysicalDevice & device, const VkSurfaceKHR & surface)
 {
@@ -59,10 +61,12 @@ VkPresentModeKHR SwapChainSupport::getBestPresentationMode() const
 	return VK_PRESENT_MODE_FIFO_KHR;
 }
 
-VkExtent2D SwapChainSupport::getSwapExtent() const
+VkExtent2D SwapChainSupport::getSwapExtent(const Window & window) const
 {
 	if (capabilities.currentExtent.width != UINT32_MAX)
 		return capabilities.currentExtent;
+	
+	Vec2u resolution = window.getResolution();
 
 	const WindowOptions& options = getOptions().window;
 	VkExtent2D actualExtent = {options.width, options.height};
