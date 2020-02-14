@@ -7,7 +7,7 @@
 #include "GLFW/glfw3.h"
 
 #include "Options.h"
-#include "Vector.h"
+#include "Math/Vector.h"
 #include "Window.h"
 
 SwapChainSupport::SwapChainSupport(const VkPhysicalDevice & device, const VkSurfaceKHR & surface)

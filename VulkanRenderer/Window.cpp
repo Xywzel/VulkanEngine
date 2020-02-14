@@ -4,7 +4,7 @@
 #include "GLFW/glfw3.h"
 
 #include "Options.h"
-#include "Vector.h"
+#include "Math/Vector.h"
 
 static void framebufferResizeCallback(GLFWwindow* window, int width, int height)
 {

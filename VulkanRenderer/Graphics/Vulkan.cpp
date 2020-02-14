@@ -16,7 +16,7 @@
 #include "Framebuffer.h"
 #include "CommandPool.h"
 #include "CommandBuffer.h"
-#include "Vector.h"
+#include "Math/Vector.h"
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)

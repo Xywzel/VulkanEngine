@@ -4,7 +4,7 @@
 
 #include "Options.h"
 #include "Window.h"
-#include "Vulkan.h"
+#include "Graphics/Vulkan.h"
 
 Application::Application()
 {

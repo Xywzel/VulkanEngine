@@ -94,7 +94,7 @@
       <TreatWarningAsError>false</TreatWarningAsError>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <EnableModules>false</EnableModules>
-      <AdditionalIncludeDirectories>$(SolutionDir)Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILD_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <BuildLog>
@@ -114,7 +114,7 @@
       <TreatWarningAsError>false</TreatWarningAsError>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <EnableModules>false</EnableModules>
-      <AdditionalIncludeDirectories>$(SolutionDir)Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILD_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <BuildLog>
@@ -136,7 +136,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <EnableModules>false</EnableModules>
-      <AdditionalIncludeDirectories>$(SolutionDir)Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILD_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -160,7 +160,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <EnableModules>false</EnableModules>
-      <AdditionalIncludeDirectories>$(SolutionDir)Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>BUILD_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -174,42 +174,43 @@
     </BuildLog>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Algorithms.cpp" />
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="CommandBuffer.cpp" />
-    <ClCompile Include="CommandPool.cpp" />
-    <ClCompile Include="File.cpp" />
-    <ClCompile Include="FileInStream.cpp" />
-    <ClCompile Include="FileOutStream.cpp" />
-    <ClCompile Include="Framebuffer.cpp" />
-    <ClCompile Include="QueueFamilyIndices.cpp" />
+    <ClCompile Include="Files\File.cpp" />
+    <ClCompile Include="Files\FileInStream.cpp" />
+    <ClCompile Include="Files\FileOutStream.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Math\Algorithms.cpp" />
     <ClCompile Include="Options.cpp" />
-    <ClCompile Include="RenderPass.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="SwapChainSupport.cpp" />
-    <ClCompile Include="Vector.cpp" />
-    <ClCompile Include="Vulkan.cpp" />
+    <ClCompile Include="Math\Vector.cpp" />
+    <ClCompile Include="Graphics\CommandBuffer.cpp" />
+    <ClCompile Include="Graphics\CommandPool.cpp" />
+    <ClCompile Include="Graphics\Framebuffer.cpp" />
+    <ClCompile Include="Graphics\QueueFamilyIndices.cpp" />
+    <ClCompile Include="Graphics\RenderPass.cpp" />
+    <ClCompile Include="Graphics\Shader.cpp" />
+    <ClCompile Include="Graphics\SwapChainSupport.cpp" />
+    <ClCompile Include="Graphics\Vulkan.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Algorithms.h" />
     <ClInclude Include="Application.h" />
-    <ClInclude Include="CommandBuffer.h" />
-    <ClInclude Include="CommandPool.h" />
-    <ClInclude Include="File.h" />
-    <ClInclude Include="FileInStream.h" />
-    <ClInclude Include="FileOutStream.h" />
-    <ClInclude Include="Framebuffer.h" />
-    <ClInclude Include="QueueFamilyIndices.h" />
+    <ClInclude Include="Files\File.h" />
+    <ClInclude Include="Files\FileInStream.h" />
+    <ClInclude Include="Files\FileOutStream.h" />
+    <ClInclude Include="Math\Algorithms.h" />
+    <ClInclude Include="Math\Vector.h" />
     <ClInclude Include="Options.h" />
-    <ClInclude Include="RenderPass.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="SwapChainSupport.h" />
     <ClInclude Include="Types.h" />
-    <ClInclude Include="Vector.h" />
-    <ClInclude Include="Vulkan.h" />
-    <ClInclude Include="VulkanTypes.h" />
+    <ClInclude Include="Vertex.h" />
+    <ClInclude Include="Graphics\CommandBuffer.h" />
+    <ClInclude Include="Graphics\CommandPool.h" />
+    <ClInclude Include="Graphics\Framebuffer.h" />
+    <ClInclude Include="Graphics\QueueFamilyIndices.h" />
+    <ClInclude Include="Graphics\RenderPass.h" />
+    <ClInclude Include="Graphics\Shader.h" />
+    <ClInclude Include="Graphics\SwapChainSupport.h" />
+    <ClInclude Include="Graphics\Vulkan.h" />
+    <ClInclude Include="Graphics\VulkanTypes.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

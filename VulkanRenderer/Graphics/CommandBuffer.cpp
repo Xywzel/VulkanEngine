@@ -1,12 +1,12 @@
 #include "CommandBuffer.h"
 
 #define GLFW_INCLUDE_VULKAN
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
-#include "CommandPool.h"
-#include "RenderPass.h"
-#include "Framebuffer.h"
-#include "Shader.h"
+#include "Graphics/CommandPool.h"
+#include "Graphics/RenderPass.h"
+#include "Graphics/Framebuffer.h"
+#include "Graphics/Shader.h"
 
 #include <iostream>
 

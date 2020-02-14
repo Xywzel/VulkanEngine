@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shaders", "Shaders", "{B2BF
 	ProjectSection(SolutionItems) = preProject
 		Resources\Shaders\triangle.frag = Resources\Shaders\triangle.frag
 		Resources\Shaders\triangle.vert = Resources\Shaders\triangle.vert
+		Resources\Shaders\vertex.frag = Resources\Shaders\vertex.frag
+		Resources\Shaders\vertex.vert = Resources\Shaders\vertex.vert
 	EndProjectSection
 EndProject
 Global
