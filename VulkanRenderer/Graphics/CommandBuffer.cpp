@@ -7,10 +7,12 @@
 #include "Graphics/RenderPass.h"
 #include "Graphics/Framebuffer.h"
 #include "Graphics/Shader.h"
+#include "Graphics/VertexBuffer.h"
 
 #include <iostream>
 
-CommandBuffer::CommandBuffer(VkDevice& device, CommandPool& commandPool_, RenderPass& renderPass, Framebuffer& framebuffer, VkExtent2D swapchainExtent, Shader& shader)
+
+CommandBuffer::CommandBuffer(VkDevice & device, CommandPool & commandPool_, RenderPass & renderPass, Framebuffer & framebuffer, VkExtent2D swapchainExtent, Shader & shader, VertexBuffer & vertexBuffer, VertexBuffer & indexBuffer)
 	: device(device)
 {
 	commandPool = &commandPool_;
@@ -47,7 +49,13 @@ CommandBuffer::CommandBuffer(VkDevice& device, CommandPool& commandPool_, Render
 
 		vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 		vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, shader.getPipeline());
-		vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+
+		VkBuffer vertexBuffers[] = {vertexBuffer.getHandle()};
+		VkDeviceSize offsets[] = {0};
+		vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
+		vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer.getHandle(), 0, VK_INDEX_TYPE_UINT16);
+
+		vkCmdDrawIndexed(commandBuffers[i], indexBuffer.getCount(), 1, 0, 0, 0);
 		vkCmdEndRenderPass(commandBuffers[i]);
 
 		if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS)

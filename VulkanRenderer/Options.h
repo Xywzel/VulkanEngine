@@ -15,6 +15,8 @@ struct VulkanOptions
 {
 	std::string name = "VulkanRender";
 	std::string engine = "VulkanEngine";
+	std::string vertexShader = "Resources/Shaders/Compiled/vertex.vert.spv";
+	std::string fragmentShader = "Resources/Shaders/Compiled/vertex.frag.spv";
 	int major = 0;
 	int minor = 0;
 	int patch = 1;

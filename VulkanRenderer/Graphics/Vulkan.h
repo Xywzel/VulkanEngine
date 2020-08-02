@@ -15,6 +15,7 @@ class RenderPass;
 class Framebuffer;
 class CommandPool;
 class CommandBuffer;
+class VertexBuffer;
 
 class Vulkan
 {
@@ -59,6 +60,8 @@ private:
 	RenderPass* renderpass = nullptr;
 	Shader* shader = nullptr;
 	Framebuffer* framebuffer = nullptr;
+	VertexBuffer* vertexBuffer = nullptr;
+	VertexBuffer* indexBuffer = nullptr;
 	CommandPool* commandPool = nullptr;
 	CommandBuffer* commandBuffer = nullptr;
 	std::vector<VkSemaphore> imageAvailableSemaphores;

@@ -17,6 +17,8 @@
 #include "CommandPool.h"
 #include "CommandBuffer.h"
 #include "Math/Vector.h"
+#include "Vertex.h"
+#include "VertexBuffer.h"
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
@@ -56,6 +58,19 @@ Vulkan::Vulkan(const Window& window)
 {
 }
 
+std::vector<Vertex> vertices =
+{
+	{{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
+	{{ 0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f}},
+	{{ 0.5f,  0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 1.0f}},
+	{{-0.5f,  0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f, 1.0f}}
+};
+
+std::vector<uint16_t> indices =
+{
+	0,1,2,2,3,0
+};
+
 Vulkan::Vulkan(const VulkanOptions& options, const Window& window)
 {
 	setupInstance(options, window);
@@ -68,10 +83,24 @@ Vulkan::Vulkan(const VulkanOptions& options, const Window& window)
 	renderpass = new RenderPass(device, swapchainFormat);
 	shader = new Shader(device, swapchainExtent, *renderpass);
 	commandPool = new CommandPool(queueFamily(physicalDevice), device);
-
 	framebuffer = new Framebuffer(*renderpass, swapchainImageViews, device, swapchainExtent);
+	
+	{
+		VertexBuffer stagingBuffer = VertexBuffer(device, physicalDevice, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, sizeof(Vertex), vertices.size());
+		stagingBuffer.setData(vertices);
+		vertexBuffer = new VertexBuffer(device, physicalDevice, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, sizeof(Vertex), vertices.size());
+		stagingBuffer.copyTo(*vertexBuffer, *commandPool, graphicsQueue);
+	}
 
-	commandBuffer = new CommandBuffer(device, *commandPool, *renderpass, *framebuffer, swapchainExtent, *shader);
+	{
+		VertexBuffer stagingBuffer = VertexBuffer(device, physicalDevice, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, sizeof(uint16_t), indices.size());
+		stagingBuffer.setData(indices);
+		indexBuffer = new VertexBuffer(device, physicalDevice, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, sizeof(uint16_t), indices.size());
+		stagingBuffer.copyTo(*indexBuffer, *commandPool, graphicsQueue);
+	}
+
+
+	commandBuffer = new CommandBuffer(device, *commandPool, *renderpass, *framebuffer, swapchainExtent, *shader, *vertexBuffer, *indexBuffer);
 	setupSemaphores(options);
 }
 
@@ -96,6 +125,10 @@ Vulkan::~Vulkan()
 		vkDestroyImageView(device, view, nullptr);
 	if (swapchain)
 		vkDestroySwapchainKHR(device, swapchain, nullptr);
+	if (indexBuffer)
+		delete indexBuffer;
+	if (vertexBuffer)
+		delete vertexBuffer;
 	if (commandPool)
 		delete commandPool;
 	if (device)
@@ -540,7 +573,7 @@ void Vulkan::recreateSwapchain(const Window & window)
 	renderpass = new RenderPass(device, swapchainFormat);
 	shader = new Shader(device, swapchainExtent, *renderpass);
 	framebuffer = new Framebuffer(*renderpass, swapchainImageViews, device, swapchainExtent);
-	commandBuffer = new CommandBuffer(device, *commandPool, *renderpass, *framebuffer, swapchainExtent, *shader);
+	commandBuffer = new CommandBuffer(device, *commandPool, *renderpass, *framebuffer, swapchainExtent, *shader, *vertexBuffer, *indexBuffer);
 
 	std::cout << "Swapchain recreated" << std::endl;
 }

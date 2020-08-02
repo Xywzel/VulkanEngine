@@ -58,6 +58,12 @@
     <ClCompile Include="Math\Vector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Graphics\Vertex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\VertexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Algorithms.h">
@@ -87,9 +93,6 @@
     <ClInclude Include="Math\Vector.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="Vertex.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\CommandBuffer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -117,5 +120,9 @@
     <ClInclude Include="Graphics\VulkanTypes.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Graphics\Vertex.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\VertexBuffer.h" />
   </ItemGroup>
 </Project>

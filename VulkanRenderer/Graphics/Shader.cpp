@@ -3,16 +3,19 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <array>
 
 #include "Files/File.h"
 #include "RenderPass.h"
+#include "Options.h"
+#include "Graphics/Vertex.h"
 
 Shader::Shader(VkDevice& device, VkExtent2D& extent, RenderPass& renderpass)
 	: device(device)
 	, extent(extent)
 {
-	vertexModule = createModule("Resources/Shaders/Compiled/triangle.vert.spv");
-	fragmentModule = createModule("Resources/Shaders/Compiled/triangle.frag.spv");
+	vertexModule = createModule(getOptions().vulkan.vertexShader);
+	fragmentModule = createModule(getOptions().vulkan.fragmentShader);
 	createPipeline(renderpass);
 }
 
@@ -61,12 +64,15 @@ void Shader::createPipeline(RenderPass& renderpass)
 
 	VkPipelineShaderStageCreateInfo shaderStages[] = {vertShaderStageInfo, fragShaderStageInfo};
 
+	VkVertexInputBindingDescription bindingDescription = Vertex::getBindingDescription();
+	std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions = Vertex::getAttributeDescriptions();
+
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo = {};
 	vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-	vertexInputInfo.vertexBindingDescriptionCount = 0;
-	vertexInputInfo.pVertexBindingDescriptions = nullptr; // Optional
-	vertexInputInfo.vertexAttributeDescriptionCount = 0;
-	vertexInputInfo.pVertexAttributeDescriptions = nullptr; // Optional
+	vertexInputInfo.vertexBindingDescriptionCount = 1;
+	vertexInputInfo.pVertexBindingDescriptions = &bindingDescription;
+	vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
+	vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
 
 	VkPipelineInputAssemblyStateCreateInfo inputAssembly = {};
 	inputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;

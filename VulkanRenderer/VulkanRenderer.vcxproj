@@ -178,6 +178,8 @@
     <ClCompile Include="Files\File.cpp" />
     <ClCompile Include="Files\FileInStream.cpp" />
     <ClCompile Include="Files\FileOutStream.cpp" />
+    <ClCompile Include="Graphics\Vertex.cpp" />
+    <ClCompile Include="Graphics\VertexBuffer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math\Algorithms.cpp" />
     <ClCompile Include="Options.cpp" />
@@ -197,11 +199,12 @@
     <ClInclude Include="Files\File.h" />
     <ClInclude Include="Files\FileInStream.h" />
     <ClInclude Include="Files\FileOutStream.h" />
+    <ClInclude Include="Graphics\VertexBuffer.h" />
     <ClInclude Include="Math\Algorithms.h" />
     <ClInclude Include="Math\Vector.h" />
     <ClInclude Include="Options.h" />
     <ClInclude Include="Types.h" />
-    <ClInclude Include="Vertex.h" />
+    <ClInclude Include="Graphics\Vertex.h" />
     <ClInclude Include="Graphics\CommandBuffer.h" />
     <ClInclude Include="Graphics\CommandPool.h" />
     <ClInclude Include="Graphics\Framebuffer.h" />
